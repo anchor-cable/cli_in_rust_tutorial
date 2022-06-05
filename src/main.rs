@@ -1,3 +1,4 @@
+use anyhow::Context;
 use clap::Parser;
 use std::fs::File;
 use std::io::prelude::*;
@@ -12,8 +13,9 @@ struct Cli {
 
 fn main() {
     let args = Cli::parse();
-    let content = File::open(&args.path).expect("cloud not read file");
-    let reader = BufReader::new(content);
+    let content =
+        File::open(&args.path).with_context(|| format!("could not read file `{:#?}`", &args.path));
+    let reader = BufReader::new(content.unwrap());
 
     for line in reader.lines() {
         let l = line.unwrap();
