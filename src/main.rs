@@ -1,5 +1,6 @@
 use anyhow::Context;
 use clap::Parser;
+use log::info;
 use std::error::Error;
 use std::fs::File;
 use std::io;
@@ -14,6 +15,10 @@ struct Cli {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    env_logger::init();
+
+    info!("starting up");
+
     let args = Cli::parse();
     let content = File::open(&args.path)
         .with_context(|| format!("could not read file `{}`", &args.path.as_path().display()))?;
