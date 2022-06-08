@@ -4,7 +4,6 @@ use log::info;
 use std::error::Error;
 use std::fs::File;
 use std::io;
-use std::io::prelude::*;
 use std::io::BufReader;
 
 #[derive(Parser)]
@@ -22,16 +21,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let args = Cli::parse();
     let content = File::open(&args.path)
         .with_context(|| format!("could not read file `{}`", &args.path.as_path().display()))?;
-    let reader = BufReader::new(content);
+    let buffer = BufReader::new(content);
 
     let stdout = io::stdout();
-    let mut handle = io::BufWriter::new(stdout);
+    let mut writer = io::BufWriter::new(stdout);
 
-    for line in reader.lines() {
-        let l = line.unwrap();
-        if l.contains(&args.pattern) {
-            writeln!(handle, "{}", l)?;
-        }
-    }
+    cli_in_rust_tutorial::find_matches(buffer, &args.pattern, &mut writer)?;
     Ok(())
 }
