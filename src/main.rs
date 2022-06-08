@@ -26,6 +26,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let stdout = io::stdout();
     let mut writer = io::BufWriter::new(stdout);
 
-    cli_in_rust_tutorial::find_matches(buffer, &args.pattern, &mut writer)?;
+    grrs::find_matches(buffer, &args.pattern, &mut writer)?;
     Ok(())
 }
